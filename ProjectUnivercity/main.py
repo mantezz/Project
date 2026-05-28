@@ -11,9 +11,7 @@ from PIL import Image, ImageTk
 
 class Message:
     """Класс для хранения сообщения в чате"""
-
-    def __init__(self, role: str, content: str, timestamp: datetime = None,
-                 file_path: str = None, image_path: str = None):
+    def __init__(self, role: str, content: str, timestamp: datetime = None, file_path: str = None, image_path: str = None):
         self.role = role
         self.content = content
         self.timestamp = timestamp or datetime.now()
@@ -42,7 +40,6 @@ class Message:
 
 class Chat:
     """Класс для управления отдельным чатом"""
-
     def __init__(self, chat_id: str, name: str, subject: str, created_at: datetime = None):
         self.chat_id = chat_id
         self.name = name
@@ -80,15 +77,14 @@ class Chat:
 
 class AIAssistant:
     """Класс для AI помощника"""
-
     @staticmethod
     def get_response(message: str, context: List[Message] = None) -> str:
         """
-        Заглушка для ответа AI.
-        Здесь можно подключить DeepSeek API
+        Заглушка
+        Здесь подключим какой-нибудь API
         """
         import time
-        time.sleep(1)  # Имитация задержки ответа
+        time.sleep(1)
 
         if "привет" in message.lower():
             return "Привет! Я твой помощник по математическому анализу. Чем могу помочь?"
@@ -109,7 +105,7 @@ class AIAssistant:
         if file_ext == '.txt':
             try:
                 with open(file_path, 'r', encoding='utf-8') as f:
-                    content = f.read()[:500]  # Читаем первые 500 символов
+                    content = f.read()[:500]  # Читаем первые 500 символов (потом поменяем)
                 return f"📄 Прочитан файл {os.path.basename(file_path)}:\n\n{content}\n\n... (файл обработан, можно задать вопросы по содержимому)"
             except:
                 return f"❌ Не удалось прочитать файл {os.path.basename(file_path)}"
@@ -119,7 +115,6 @@ class AIAssistant:
 
 class Storage:
     """Класс для хранения данных"""
-
     def __init__(self, data_dir: str = "data"):
         self.data_dir = data_dir
         self.chats_dir = os.path.join(data_dir, "chats")
@@ -158,14 +153,12 @@ class Storage:
 
 
 class ChatBubble(tk.Frame):
-    """Виджет для отображения сообщения в виде пузырька"""
-
+    """Виджет для отображения сообщения"""
     def __init__(self, parent, message: Message, **kwargs):
         super().__init__(parent, **kwargs)
 
         self.configure(bg=parent.cget('bg'))
 
-        # Цвета в стиле DeepSeek
         if message.role == "user":
             bubble_color = "#E8F2FF"  # Светло-синий для пользователя
             align = "e"
@@ -173,11 +166,10 @@ class ChatBubble(tk.Frame):
             bubble_color = "#FFFFFF"  # Белый для AI
             align = "w"
 
-        # Контейнер для сообщения (с закруглениями)
+        # Контейнер для сообщения
         self.bubble = tk.Frame(self, bg=bubble_color, bd=0, relief=tk.FLAT)
         self.bubble.pack(fill=tk.X, padx=10, pady=5, anchor=align)
 
-        # Создаём canvas для закруглённых углов
         self.canvas = tk.Canvas(self.bubble, bg=bubble_color, highlightthickness=0, height=1)
         self.canvas.pack(fill=tk.BOTH, expand=True)
 
@@ -191,18 +183,14 @@ class ChatBubble(tk.Frame):
 
         # Иконка роли
         role_icon = "👤" if message.role == "user" else "🤖"
-        tk.Label(top_frame, text=f"{role_icon} {message.role.upper()}",
-                 font=("Arial", 9, "bold"), bg=bubble_color, fg="#4A5B6E").pack(side=tk.LEFT)
+        tk.Label(top_frame, text=f"{role_icon} {message.role.upper()}", font=("Arial", 9, "bold"), bg=bubble_color, fg="#4A5B6E").pack(side=tk.LEFT)
 
         # Время сообщения
         time_str = message.timestamp.strftime("%H:%M")
-        tk.Label(top_frame, text=time_str, font=("Arial", 8),
-                 bg=bubble_color, fg="#8A99B0").pack(side=tk.RIGHT)
+        tk.Label(top_frame, text=time_str, font=("Arial", 8), bg=bubble_color, fg="#8A99B0").pack(side=tk.RIGHT)
 
         # Текст сообщения
-        text_widget = tk.Text(content_frame, wrap=tk.WORD, bg=bubble_color,
-                              font=("Arial", 10), height=1, padx=0, pady=0,
-                              relief=tk.FLAT, borderwidth=0, fg="#1F2A3E")
+        text_widget = tk.Text(content_frame, wrap=tk.WORD, bg=bubble_color, font=("Arial", 10), height=1, padx=0, pady=0, relief=tk.FLAT, borderwidth=0, fg="#1F2A3E")
         text_widget.insert("1.0", message.content)
         text_widget.configure(state="disabled")
         text_widget.pack(fill=tk.X, pady=(0, 5))
@@ -211,14 +199,12 @@ class ChatBubble(tk.Frame):
         if message.file_path:
             file_frame = tk.Frame(content_frame, bg=bubble_color)
             file_frame.pack(fill=tk.X)
-            tk.Label(file_frame, text=f"📎 {os.path.basename(message.file_path)}",
-                     bg=bubble_color, font=("Arial", 9), fg="#0066CC").pack(side=tk.LEFT)
+            tk.Label(file_frame, text=f"📎 {os.path.basename(message.file_path)}", bg=bubble_color, font=("Arial", 9), fg="#0066CC").pack(side=tk.LEFT)
 
         if message.image_path:
             image_frame = tk.Frame(content_frame, bg=bubble_color)
             image_frame.pack(fill=tk.X)
-            tk.Label(image_frame, text=f"🖼️ {os.path.basename(message.image_path)}",
-                     bg=bubble_color, font=("Arial", 9), fg="#0066CC").pack(side=tk.LEFT)
+            tk.Label(image_frame, text=f"🖼️ {os.path.basename(message.image_path)}", bg=bubble_color, font=("Arial", 9), fg="#0066CC").pack(side=tk.LEFT)
 
         # Обновляем высоту
         self.update_text_height(text_widget)
@@ -227,7 +213,7 @@ class ChatBubble(tk.Frame):
         self.bubble.after(10, self.apply_rounded_corners)
 
     def apply_rounded_corners(self):
-        """Применяет закругления к пузырьку"""
+        """Применяет закругления к сообщениям"""
         width = self.bubble.winfo_width()
         height = self.bubble.winfo_height()
         if width > 10 and height > 10:
@@ -240,8 +226,7 @@ class ChatBubble(tk.Frame):
                          (r, height), (0, height), (0, height - r),
                          (0, r), (0, 0)]:
                 points.extend([x, y])
-            self.canvas.create_polygon(points, fill=self.bubble.cget('bg'),
-                                       outline="", tags="rounded")
+            self.canvas.create_polygon(points, fill=self.bubble.cget('bg'), outline="", tags="rounded")
             self.canvas.lower("rounded")
 
     def update_text_height(self, text_widget):
@@ -255,11 +240,10 @@ class ChatBubble(tk.Frame):
 
 class ChatApplication:
     """Главное приложение с GUI"""
-
     def __init__(self, root):
         self.root = root
         self.root.title("AI Учебный Помощник")
-        self.root.geometry("1200x700")
+        self.root.geometry("1920x1080")
 
         # Настройка стилей
         self.setup_styles()
@@ -280,12 +264,12 @@ class ChatApplication:
         self.show_subjects()
 
     def setup_styles(self):
-        """Настройка цветовой схемы (светлая тема как у DeepSeek)"""
+        """Настройка цветовой схемы"""
         self.colors = {
-            'bg': "#F7F8FA",  # Светлый фон как у DeepSeek
+            'bg': "#F7F8FA",  # Светлый фон
             'sidebar': "#FFFFFF",  # Белая боковая панель
-            'card': "#FFFFFF",  # Белый цвет карточек (добавлено!)
-            'accent': "#0066CC",  # Синий акцент как у DeepSeek
+            'card': "#FFFFFF",  # Белый цвет карточек
+            'accent': "#0066CC",  # Синий акцент
             'accent_hover': "#0052A3",  # Тёмно-синий при наведении
             'hover': "#F0F2F5",  # Светло-серый при наведении
             'text': "#1F2A3E",  # Тёмно-синий текст
@@ -306,8 +290,7 @@ class ChatApplication:
         self.main_container.pack(fill=tk.BOTH, expand=True)
 
         # Боковая панель для чатов с рамкой
-        self.sidebar = tk.Frame(self.main_container, bg=self.colors['sidebar'], width=280,
-                                highlightthickness=1, highlightbackground=self.colors['divider'])
+        self.sidebar = tk.Frame(self.main_container, bg=self.colors['sidebar'], width=280, highlightthickness=1, highlightbackground=self.colors['divider'])
         self.sidebar.pack(side=tk.LEFT, fill=tk.Y, padx=(0, 0))
         self.sidebar.pack_propagate(False)
 
@@ -319,9 +302,7 @@ class ChatApplication:
         sidebar_header = tk.Frame(self.sidebar, bg=self.colors['sidebar'])
         sidebar_header.pack(fill=tk.X)
 
-        self.sidebar_title = tk.Label(sidebar_header, text="Список чатов",
-                                      bg=self.colors['sidebar'], fg=self.colors['text'],
-                                      font=("Arial", 14, "bold"), pady=15)
+        self.sidebar_title = tk.Label(sidebar_header, text="Список чатов", bg=self.colors['sidebar'], fg=self.colors['text'], font=("Arial", 14, "bold"), pady=15)
         self.sidebar_title.pack()
 
         # Нижняя граница под заголовком
@@ -346,10 +327,7 @@ class ChatApplication:
         self.chats_scrollbar = tk.Scrollbar(self.chats_frame, orient="vertical", command=self.chats_canvas.yview)
         self.chats_scrollable_frame = tk.Frame(self.chats_canvas, bg=self.colors['sidebar'])
 
-        self.chats_scrollable_frame.bind(
-            "<Configure>",
-            lambda e: self.chats_canvas.configure(scrollregion=self.chats_canvas.bbox("all"))
-        )
+        self.chats_scrollable_frame.bind("<Configure>", lambda e: self.chats_canvas.configure(scrollregion=self.chats_canvas.bbox("all")))
 
         self.chats_canvas.create_window((0, 0), window=self.chats_scrollable_frame, anchor="nw")
         self.chats_canvas.configure(yscrollcommand=self.chats_scrollbar.set)
@@ -358,8 +336,7 @@ class ChatApplication:
         self.chats_scrollbar.pack(side="right", fill="y")
 
         # Основная область чата с рамкой
-        self.chat_area = tk.Frame(self.main_container, bg=self.colors['bg'],
-                                  highlightthickness=0)
+        self.chat_area = tk.Frame(self.main_container, bg=self.colors['bg'], highlightthickness=0)
         self.chat_area.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
 
         # Верхняя панель чата с нижней границей
@@ -369,26 +346,19 @@ class ChatApplication:
         # Нижняя граница хедера
         tk.Frame(self.chat_header, bg=self.colors['divider'], height=1).pack(side=tk.BOTTOM, fill=tk.X)
 
-        self.chat_title = tk.Label(self.chat_header, text="Добро пожаловать!",
-                                   bg=self.colors['sidebar'], fg=self.colors['text'],
-                                   font=("Arial", 16, "bold"))
+        self.chat_title = tk.Label(self.chat_header, text="Добро пожаловать!", bg=self.colors['sidebar'], fg=self.colors['text'], font=("Arial", 16, "bold"))
         self.chat_title.pack(side=tk.LEFT, padx=20, pady=15)
 
         # Кнопки управления чатом
-        btn_style = {"bg": self.colors['sidebar'], "fg": self.colors['text_light'],
-                     "font": ("Arial", 9), "relief": tk.FLAT, "cursor": "hand2",
-                     "activebackground": self.colors['hover']}
+        btn_style = {"bg": self.colors['sidebar'], "fg": self.colors['text_light'], "font": ("Arial", 9), "relief": tk.FLAT, "cursor": "hand2", "activebackground": self.colors['hover']}
 
-        self.rename_chat_btn = tk.Button(self.chat_header, text="✏️ Переименовать",
-                                         **btn_style, command=self.rename_chat)
+        self.rename_chat_btn = tk.Button(self.chat_header, text="✏️ Переименовать", **btn_style, command=self.rename_chat)
         self.rename_chat_btn.pack(side=tk.RIGHT, padx=5, pady=15)
 
-        self.delete_chat_btn = tk.Button(self.chat_header, text="🗑️ Удалить чат",
-                                         **btn_style, command=self.delete_chat)
+        self.delete_chat_btn = tk.Button(self.chat_header, text="🗑️ Удалить чат", **btn_style, command=self.delete_chat)
         self.delete_chat_btn.pack(side=tk.RIGHT, padx=5, pady=15)
 
-        self.back_btn = tk.Button(self.chat_header, text="← Назад к предметам",
-                                  **btn_style, command=self.back_to_subjects)
+        self.back_btn = tk.Button(self.chat_header, text="← Назад к предметам", **btn_style, command=self.back_to_subjects)
         self.back_btn.pack(side=tk.RIGHT, padx=5, pady=15)
 
         # Область сообщений
@@ -396,14 +366,10 @@ class ChatApplication:
         self.messages_container.pack(fill=tk.BOTH, expand=True)
 
         self.messages_canvas = tk.Canvas(self.messages_container, bg=self.colors['bg'], highlightthickness=0)
-        self.messages_scrollbar = tk.Scrollbar(self.messages_container, orient="vertical",
-                                               command=self.messages_canvas.yview)
+        self.messages_scrollbar = tk.Scrollbar(self.messages_container, orient="vertical", command=self.messages_canvas.yview)
         self.messages_frame = tk.Frame(self.messages_canvas, bg=self.colors['bg'])
 
-        self.messages_frame.bind(
-            "<Configure>",
-            lambda e: self.messages_canvas.configure(scrollregion=self.messages_canvas.bbox("all"))
-        )
+        self.messages_frame.bind("<Configure>", lambda e: self.messages_canvas.configure(scrollregion=self.messages_canvas.bbox("all")))
 
         self.messages_canvas.create_window((0, 0), window=self.messages_frame, anchor="nw")
         self.messages_canvas.configure(yscrollcommand=self.messages_scrollbar.set)
@@ -421,28 +387,20 @@ class ChatApplication:
         self.buttons_frame = tk.Frame(self.input_frame, bg=self.colors['sidebar'])
         self.buttons_frame.pack(fill=tk.X, padx=15, pady=(10, 5))
 
-        file_btn_style = {"bg": self.colors['accent'], "fg": "white",
-                          "font": ("Arial", 9), "relief": tk.FLAT, "cursor": "hand2",
-                          "activebackground": self.colors['accent_hover']}
+        file_btn_style = {"bg": self.colors['accent'], "fg": "white", "font": ("Arial", 9), "relief": tk.FLAT, "cursor": "hand2", "activebackground": self.colors['accent_hover']}
 
-        self.file_btn = tk.Button(self.buttons_frame, text="📎 Прикрепить файл",
-                                  command=self.attach_file, **file_btn_style)
+        self.file_btn = tk.Button(self.buttons_frame, text="📎 Прикрепить файл", command=self.attach_file, **file_btn_style)
         self.file_btn.pack(side=tk.LEFT, padx=(0, 10))
 
-        self.image_btn = tk.Button(self.buttons_frame, text="🖼️ Добавить изображение",
-                                   command=self.attach_image, **file_btn_style)
+        self.image_btn = tk.Button(self.buttons_frame, text="🖼️ Добавить изображение", command=self.attach_image, **file_btn_style)
         self.image_btn.pack(side=tk.LEFT)
 
         # Поле ввода текста с рамкой
-        input_container = tk.Frame(self.input_frame, bg=self.colors['input_bg'],
-                                   bd=1, relief=tk.SOLID)
+        input_container = tk.Frame(self.input_frame, bg=self.colors['input_bg'], bd=1, relief=tk.SOLID)
         input_container.pack(fill=tk.X, padx=15, pady=(5, 10))
-        input_container.config(highlightbackground=self.colors['card_border'],
-                               highlightcolor=self.colors['accent'],
-                               highlightthickness=1)
+        input_container.config(highlightbackground=self.colors['card_border'], highlightcolor=self.colors['accent'], highlightthickness=1)
 
-        self.input_text = tk.Text(input_container, height=3, font=("Arial", 10),
-                                  bg=self.colors['input_bg'], fg=self.colors['text'],
+        self.input_text = tk.Text(input_container, height=3, font=("Arial", 10), bg=self.colors['input_bg'], fg=self.colors['text'],
                                   insertbackground=self.colors['text'],
                                   relief=tk.FLAT, bd=0, padx=10, pady=8)
         self.input_text.pack(fill=tk.BOTH, expand=True)
@@ -460,6 +418,7 @@ class ChatApplication:
 
         # Скрываем элементы управления чатом, пока чат не выбран
         self.toggle_chat_controls(False)
+        
         # Изначально скрываем панель ввода
         self.input_frame.pack_forget()
 
@@ -495,9 +454,7 @@ class ChatApplication:
         subjects_frame.pack(expand=True)
 
         # Заголовок
-        title = tk.Label(subjects_frame, text="Выберите предмет",
-                         bg=self.colors['bg'], fg=self.colors['text'],
-                         font=("Arial", 24, "bold"))
+        title = tk.Label(subjects_frame, text="Выберите предмет", bg=self.colors['bg'], fg=self.colors['text'], font=("Arial", 24, "bold"))
         title.pack(pady=50)
 
         # Плашки предметов
@@ -580,9 +537,7 @@ class ChatApplication:
             for widget in self.messages_frame.winfo_children():
                 widget.destroy()
 
-            welcome_icon = tk.Label(self.messages_frame, text="💬",
-                                    bg=self.colors['bg'], fg=self.colors['accent'],
-                                    font=("Arial", 48))
+            welcome_icon = tk.Label(self.messages_frame, text="💬", bg=self.colors['bg'], fg=self.colors['accent'], font=("Arial", 48))
             welcome_icon.pack(expand=True, pady=(100, 10))
 
             welcome_label = tk.Label(self.messages_frame,
@@ -622,8 +577,7 @@ class ChatApplication:
             messagebox.showwarning("Ошибка", "Сначала выберите предмет!")
             return
 
-        name = simpledialog.askstring("Новый чат", "Введите название чата:",
-                                      parent=self.root)
+        name = simpledialog.askstring("Новый чат", "Введите название чата:", parent=self.root)
 
         if name is None:
             return
@@ -734,8 +688,7 @@ class ChatApplication:
         file_path = filedialog.askopenfilename(title="Выберите файл")
         if file_path:
             # Добавляем сообщение о файле
-            user_msg = Message("user", f"📎 Отправлен файл: {os.path.basename(file_path)}",
-                               file_path=file_path)
+            user_msg = Message("user", f"📎 Отправлен файл: {os.path.basename(file_path)}", file_path=file_path)
             self.current_chat.add_message(user_msg)
 
             # Обрабатываем файл
@@ -752,11 +705,9 @@ class ChatApplication:
             messagebox.showwarning("Ошибка", "Сначала выберите или создайте чат!")
             return
 
-        image_path = filedialog.askopenfilename(title="Выберите изображение",
-                                                filetypes=[("Image files", "*.png *.jpg *.jpeg *.gif")])
+        image_path = filedialog.askopenfilename(title="Выберите изображение", filetypes=[("Image files", "*.png *.jpg *.jpeg *.gif")])
         if image_path:
-            user_msg = Message("user", f"🖼️ Отправлено изображение: {os.path.basename(image_path)}",
-                               image_path=image_path)
+            user_msg = Message("user", f"🖼️ Отправлено изображение: {os.path.basename(image_path)}", image_path=image_path)
             self.current_chat.add_message(user_msg)
 
             response = f"Изображение {os.path.basename(image_path)} получено. В разработке: анализ изображений через AI."
@@ -771,9 +722,7 @@ class ChatApplication:
         if not self.current_chat:
             return
 
-        new_name = simpledialog.askstring("Переименовать чат", "Введите новое название:",
-                                          initialvalue=self.current_chat.name,
-                                          parent=self.root)
+        new_name = simpledialog.askstring("Переименовать чат", "Введите новое название:", initialvalue=self.current_chat.name, parent=self.root)
 
         if new_name and new_name.strip():
             self.current_chat.name = new_name.strip()
@@ -811,9 +760,7 @@ class ChatApplication:
             self.input_frame.pack_forget()
 
             # Показываем сообщение
-            welcome_icon = tk.Label(self.messages_frame, text="🗑️",
-                                    bg=self.colors['bg'], fg=self.colors['accent'],
-                                    font=("Arial", 48))
+            welcome_icon = tk.Label(self.messages_frame, text="🗑️", bg=self.colors['bg'], fg=self.colors['accent'], font=("Arial", 48))
             welcome_icon.pack(expand=True, pady=(100, 10))
 
             welcome_label = tk.Label(self.messages_frame,
