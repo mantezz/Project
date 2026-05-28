@@ -1,0 +1,22 @@
+{
+  "chat_id": "3e5a28f3",
+  "name": "Test",
+  "subject": "Математический анализ",
+  "created_at": "2026-05-29T00:24:27.410835",
+  "messages": [
+    {
+      "role": "user",
+      "content": "интеграл",
+      "timestamp": "2026-05-29T00:24:36.401026",
+      "file_path": null,
+      "image_path": null
+    },
+    {
+      "role": "assistant",
+      "content": "Интеграл — это площадь под кривой.\n\n📌 Неопределённый интеграл: ∫xⁿ dx = xⁿ⁺¹/(n+1) + C\n📌 Определённый интеграл: ∫ₐᵇ f(x)dx = F(b) - F(a)",
+      "timestamp": "2026-05-29T00:24:37.421302",
+      "file_path": null,
+      "image_path": null
+    }
+  ]
+}
